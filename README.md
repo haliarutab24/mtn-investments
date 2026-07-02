@@ -56,6 +56,8 @@ Project Settings > Environment Variables
 
 The contact form submits to `/api/contact`, and the server route forwards messages to Web3Forms. The access key is never committed to GitHub.
 
+To change the receiving email later, create or use the Web3Forms access key for the new email account, replace `WEB3FORMS_ACCESS_KEY` in Vercel, and redeploy. No code change is required.
+
 ## Scripts
 
 ```bash
