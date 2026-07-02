@@ -45,7 +45,7 @@ http://127.0.0.1:3000
 Create `.env.local` for local development:
 
 ```bash
-WEB3FORMS_ACCESS_KEY=your_web3forms_access_key
+NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY=your_web3forms_access_key
 ```
 
 For Vercel, add the same key in:
@@ -54,9 +54,9 @@ For Vercel, add the same key in:
 Project Settings > Environment Variables
 ```
 
-The contact form submits to `/api/contact`, and the server route forwards messages to Web3Forms. The access key is never committed to GitHub.
+The contact form sends submissions directly to Web3Forms using the public access key.
 
-To change the receiving email later, create or use the Web3Forms access key for the new email account, replace `WEB3FORMS_ACCESS_KEY` in Vercel, and redeploy. No code change is required.
+To change the receiving email later, create or use the Web3Forms access key for the new email account, replace `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` in Vercel, and redeploy. No code change is required.
 
 ## Scripts
 
@@ -88,9 +88,6 @@ Runs TypeScript checks without emitting files.
 
 ```text
 app/
-  api/
-    contact/
-      route.ts          Secure contact form endpoint
   components/
     site.tsx          Shared header, footer, CTA, layout helpers
   contact/

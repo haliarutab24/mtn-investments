@@ -9,6 +9,7 @@ type FormStatus = {
 };
 
 const initialStatus: FormStatus = { type: "idle", message: "" };
+const WEB3FORMS_URL = "https://api.web3forms.com/submit";
 
 export function ContactForm() {
   const [status, setStatus] = useState<FormStatus>(initialStatus);
@@ -21,33 +22,43 @@ export function ContactForm() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
+    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
 
-    const payload = {
-      name: String(formData.get("name") || ""),
-      email: String(formData.get("email") || ""),
-      interest: String(formData.get("interest") || ""),
-      message: String(formData.get("message") || ""),
-      botcheck: String(formData.get("botcheck") || ""),
-    };
+    if (!accessKey) {
+      setStatus({
+        type: "error",
+        message: "Contact form is not configured yet.",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    formData.append("access_key", accessKey);
+    formData.append("subject", `MTN Investments inquiry: ${formData.get("interest") || "Website inquiry"}`);
+    formData.append("from_name", "MTN Investments Website");
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch(WEB3FORMS_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(Object.fromEntries(formData)),
       });
 
-      const result = (await response.json().catch(() => null)) as { message?: string } | null;
+      const result = (await response.json().catch(() => null)) as {
+        success?: boolean;
+        message?: string;
+      } | null;
 
-      if (!response.ok) {
-        throw new Error(result?.message || "Unable to send your message.");
+      if (!response.ok || result?.success === false) {
+        throw new Error(result?.message || "Unable to send your message right now.");
       }
 
       setStatus({
         type: "success",
-        message: result?.message || "Your message has been sent.",
+        message: "Your message has been sent. We will get back to you shortly.",
       });
       form.reset();
     } catch (error) {
