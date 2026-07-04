@@ -32,7 +32,7 @@ export default function ContactPage() {
             <div className="mt-8 grid gap-3">
               <div className="flex items-center gap-3 rounded-lg border border-white/12 bg-white/[0.055] p-4">
                 <Mail className="text-[#9bdff0]" size={19} aria-hidden />
-                <span className="text-sm text-white/82">partners@mtninvestments.net</span>
+                <span className="text-sm text-white/82">info@mtninvestments.net</span>
               </div>
               <div className="flex items-center gap-3 rounded-lg border border-white/12 bg-white/[0.055] p-4">
                 <MapPin className="text-[#9bdff0]" size={19} aria-hidden />
