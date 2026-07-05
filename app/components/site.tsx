@@ -1,59 +1,41 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowRight, Mail, MapPin, Menu } from "lucide-react";
+import type { ReactNode } from "react";
 import { navItems } from "../data";
+import { shell } from "./tokens";
 
-const shell = "mx-auto w-full max-w-[1190px] px-4 sm:px-6 lg:px-8";
-const heroVideoSrc = "/cta-video.mp4?v=20260705";
 const buttonBase =
-  "inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-bold transition hover:-translate-y-0.5 sm:w-auto";
+  "inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-[10px] px-5 py-2.5 text-[12px] font-bold leading-5 transition duration-300 hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:w-auto";
 
-export function VideoBackdrop() {
+export function Logo({ dark = false }: { dark?: boolean }) {
   return (
-    <>
-      <video
-        className="absolute inset-0 -z-20 h-full w-full object-cover"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        poster="/cta-rails.png"
-        aria-hidden="true"
-      >
-        <source src={heroVideoSrc} type="video/mp4" />
-      </video>
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(0,29,85,.98),rgba(0,48,135,.84),rgba(0,29,85,.7))]" />
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(rgba(255,255,255,.055)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.05)_1px,transparent_1px)] bg-[length:88px_88px] opacity-70" />
-    </>
-  );
-}
-
-export function Logo({ compact = false, dark = false }: { compact?: boolean; dark?: boolean }) {
-  return (
-    <Link href="/" className="inline-flex min-w-0 items-center gap-3 sm:gap-4" aria-label="MTN Investments home">
-      <Image
-        className={
-          compact
-            ? "h-14 w-14 shrink-0 object-contain sm:h-16 sm:w-16"
-            : "h-16 w-16 shrink-0 object-contain sm:h-[72px] sm:w-[72px]"
-        }
-        src="/mtn-logo.png"
-        alt=""
-        width={72}
-        height={72}
-        priority
-      />
-      {!compact && (
-        <span className="hidden min-w-0 uppercase sm:grid">
-          <span className={dark ? "text-sm font-extrabold text-white" : "text-sm font-extrabold text-[#071327] sm:text-base"}>
-            MTN Investments
-          </span>
-          <span className={dark ? "font-mono text-[10px] text-white/45" : "font-mono text-[10px] text-[#5d6c87]"}>
-            Global Infrastructure
-          </span>
+    <Link href="/" className="flex min-w-0 items-center gap-2.5" aria-label="MTN Investments home">
+      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#003087] font-mono text-[10px] font-black text-white shadow-[0_8px_20px_rgba(0,48,135,0.20)]">
+        MTN
+      </span>
+      <span className="grid min-w-0 uppercase">
+        <span
+          className={
+            dark
+              ? "truncate text-[11px] font-extrabold leading-3 tracking-[1.2px] text-white"
+              : "truncate text-[11px] font-extrabold leading-3 tracking-[1.2px] text-[#071327]"
+          }
+        >
+          MTN Investments
         </span>
-      )}
+        <span
+          className={
+            dark
+              ? "truncate font-mono text-[8px] font-semibold leading-3 tracking-[1px] text-white/45"
+              : "truncate font-mono text-[8px] font-semibold leading-3 tracking-[1px] text-[#5d6c87]"
+          }
+        >
+          Global Infrastructure
+        </span>
+      </span>
     </Link>
   );
 }
@@ -64,13 +46,17 @@ export function ButtonLink({
   tone = "primary",
 }: {
   href: string;
-  children: React.ReactNode;
-  tone?: "primary" | "light" | "outline";
+  children: ReactNode;
+  tone?: "primary" | "light" | "outline" | "ghost";
 }) {
   const tones = {
-    primary: "bg-[#003087] text-white shadow-[0_12px_26px_rgba(0,48,135,0.20)]",
-    light: "bg-white text-[#003087] shadow-[0_12px_28px_rgba(0,29,85,0.18)]",
-    outline: "border border-white/30 bg-white/10 text-white",
+    primary:
+      "bg-[#004aad] text-white shadow-[0_10px_24px_rgba(0,74,173,0.28)] focus-visible:outline-[#004aad]",
+    light: "bg-white text-[#004aad] shadow-[0_10px_24px_rgba(0,48,135,0.18)] focus-visible:outline-white",
+    outline:
+      "border border-white/25 bg-white/[0.06] text-white hover:bg-white/12 focus-visible:outline-white",
+    ghost:
+      "border border-[#004aad]/18 bg-white text-[#004aad] shadow-[0_8px_20px_rgba(0,48,135,0.06)] focus-visible:outline-[#004aad]",
   };
 
   return (
@@ -80,46 +66,81 @@ export function ButtonLink({
   );
 }
 
+function isActivePath(pathname: string, href: string) {
+  if (href === "/") {
+    return pathname === "/";
+  }
+
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export function Header() {
+  const pathname = usePathname();
+
   return (
-    <header className="sticky top-0 z-50 border-b border-[#003087]/10 bg-white/95 shadow-[0_8px_26px_rgba(0,48,135,0.07)] backdrop-blur">
-      <div className="mx-auto flex h-[84px] w-full max-w-[1440px] items-center gap-4 px-4 sm:h-[92px] sm:px-6 xl:gap-6 xl:px-8">
-        <Logo />
-        <nav className="hidden flex-1 items-center justify-center gap-1 xl:flex" aria-label="Main navigation">
-          {navItems.map((item) => (
-            <Link
-              className="whitespace-nowrap rounded-lg px-2 py-2 text-sm text-[#5d6c87] transition hover:bg-[#eaf2ff] hover:text-[#003087] 2xl:px-3"
-              href={item.href}
-              key={item.href}
-            >
-              {item.label}
-            </Link>
-          ))}
+    <header className="sticky top-0 z-50 border-b border-[#003087]/10 bg-[#f5f8ff]/95 text-[#0a1428] shadow-[0_8px_28px_rgba(0,48,135,0.08)] backdrop-blur">
+      <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center gap-4 px-4 sm:px-6">
+        <div className="min-w-0 flex-1 lg:min-w-[248px] lg:flex-none">
+          <Logo />
+        </div>
+
+        <nav className="hidden flex-1 items-center justify-center gap-1 lg:flex" aria-label="Main navigation">
+          {navItems.map((item) => {
+            const active = isActivePath(pathname, item.href);
+
+            return (
+              <Link
+                className={
+                  active
+                    ? "relative whitespace-nowrap rounded-[10px] bg-[#eaf2ff] px-3 py-2 text-[12px] font-bold leading-5 text-[#28547d] after:absolute after:bottom-1 after:left-4 after:h-0.5 after:w-[calc(100%-32px)] after:rounded-full after:bg-[#004aad]"
+                    : "relative whitespace-nowrap rounded-[10px] px-3 py-2 text-[12px] font-semibold leading-5 text-[#5e7099] transition duration-300 after:absolute after:bottom-1 after:left-4 after:h-0.5 after:w-[calc(100%-32px)] after:rounded-full after:bg-[#004aad] after:opacity-0 hover:bg-[#eaf2ff] hover:text-[#004aad] hover:after:opacity-100"
+                }
+                href={item.href}
+                key={item.href}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
-        <div className="hidden items-center gap-3 xl:flex">
+
+        <div className="ml-auto hidden items-center gap-2 lg:flex">
           <Link
-            className="inline-flex min-h-10 items-center whitespace-nowrap rounded-lg border border-[#003087]/25 px-4 text-sm font-semibold text-[#003087]"
+            className="inline-flex min-h-9 items-center whitespace-nowrap rounded-[10px] border border-[#004aad]/20 bg-white/40 px-4 text-[12px] font-bold text-[#004aad] transition duration-300 hover:-translate-y-0.5 hover:bg-white"
             href="/contact"
           >
             Request Demo
           </Link>
           <ButtonLink href="/contact">
-            Partner With Us <ArrowRight size={16} aria-hidden />
+            Partner With Us <ArrowRight size={13} strokeWidth={2.4} aria-hidden />
           </ButtonLink>
         </div>
-        <details className="relative ml-auto xl:hidden">
-          <summary className="grid h-11 w-11 cursor-pointer place-items-center rounded-lg border border-[#dce5f3] text-[#003087]">
+
+        <details className="relative ml-auto shrink-0 lg:hidden">
+          <summary className="grid h-10 w-10 cursor-pointer place-items-center rounded-[10px] border border-[#003087]/15 bg-white text-[#004aad] transition hover:bg-[#eaf2ff]">
             <span className="sr-only">Open menu</span>
-            <Menu size={22} aria-hidden />
+            <Menu size={21} aria-hidden />
           </summary>
-          <div className="absolute right-0 top-14 grid w-[min(290px,calc(100vw-32px))] gap-1 rounded-lg border border-[#dce5f3] bg-white p-3 shadow-[0_18px_50px_rgba(0,48,135,0.11)]">
-            {navItems.map((item) => (
-              <Link className="rounded-lg px-3 py-3 text-sm text-[#5d6c87]" href={item.href} key={item.href}>
-                {item.label}
-              </Link>
-            ))}
+          <div className="absolute right-0 top-12 z-20 grid w-[min(300px,calc(100vw-32px))] gap-1 rounded-[10px] border border-[#003087]/10 bg-white p-3 shadow-[0_18px_50px_rgba(0,48,135,0.14)]">
+            {navItems.map((item) => {
+              const active = isActivePath(pathname, item.href);
+
+              return (
+                <Link
+                  className={
+                    active
+                      ? "rounded-[8px] bg-[#eaf2ff] px-3 py-3 text-sm font-bold text-[#004aad]"
+                      : "rounded-[8px] px-3 py-3 text-sm font-semibold text-[#5e7099] transition hover:bg-[#f5f8ff] hover:text-[#004aad]"
+                  }
+                  href={item.href}
+                  key={item.href}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
             <ButtonLink href="/contact">
-              Partner With Us <ArrowRight size={16} aria-hidden />
+              Partner With Us <ArrowRight size={14} aria-hidden />
             </ButtonLink>
           </div>
         </details>
@@ -128,17 +149,35 @@ export function Header() {
   );
 }
 
-export function SectionLabel({ children, light = false }: { children: React.ReactNode; light?: boolean }) {
+export function SectionLabel({
+  children,
+  light = false,
+  centered = false,
+}: {
+  children: ReactNode;
+  light?: boolean;
+  centered?: boolean;
+}) {
   return (
-    <p
+    <div
       className={
-        light
-          ? "mb-3 font-mono text-xs font-extrabold uppercase text-white/70"
-          : "mb-3 font-mono text-xs font-extrabold uppercase text-[#0a55c7]"
+        centered
+          ? "mb-3 flex min-w-0 items-center justify-center gap-2 sm:gap-3"
+          : "mb-3 flex min-w-0 items-center gap-2 sm:gap-3"
       }
     >
-      {children}
-    </p>
+      <span className={light ? "h-px w-5 bg-white/20 sm:w-8" : "h-px w-5 bg-[#004aad]/22 sm:w-8"} />
+      <p
+        className={
+          light
+            ? "min-w-0 text-center font-mono text-[8px] font-bold uppercase leading-4 tracking-[1px] text-white/45 sm:text-[10px] sm:tracking-[1.6px]"
+            : "min-w-0 text-center font-mono text-[8px] font-bold uppercase leading-4 tracking-[1px] text-[#0a55c7] sm:text-[10px] sm:tracking-[1.6px]"
+        }
+      >
+        {children}
+      </p>
+      <span className={light ? "h-px w-5 bg-white/20 sm:w-8" : "h-px w-5 bg-[#004aad]/22 sm:w-8"} />
+    </div>
   );
 }
 
@@ -156,19 +195,27 @@ export function SectionHeader({
   light?: boolean;
 }) {
   return (
-    <div className={`${centered ? "mx-auto text-center" : ""} max-w-3xl`}>
-      <SectionLabel light={light}>{eyebrow}</SectionLabel>
+    <div className={`${centered ? "mx-auto max-w-[1120px] text-center" : "max-w-3xl"} min-w-0`}>
+      <SectionLabel light={light} centered={centered}>
+        {eyebrow}
+      </SectionLabel>
       <h2
         className={
           light
-            ? "font-serif text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl"
-            : "font-serif text-3xl font-bold leading-tight text-[#071327] sm:text-4xl lg:text-5xl"
+            ? "break-words font-serif text-[30px] font-bold leading-[1.08] text-white [overflow-wrap:anywhere] sm:text-[44px] lg:text-[52px]"
+            : "break-words font-serif text-[26px] font-bold leading-[1.12] text-[#182035] [overflow-wrap:anywhere] sm:text-[38px] lg:text-[44px]"
         }
       >
         {title}
       </h2>
       {copy && (
-        <p className={light ? "mt-4 text-base leading-7 text-white/68" : "mt-4 text-base leading-7 text-[#5d6c87]"}>
+        <p
+          className={
+            light
+              ? "mt-4 text-sm leading-6 text-white/65 sm:text-base"
+              : "mt-4 text-sm leading-6 text-[#5e7099] sm:text-base"
+          }
+        >
           {copy}
         </p>
       )}
@@ -186,12 +233,17 @@ export function PageHero({
   copy: string;
 }) {
   return (
-    <section className="relative isolate overflow-hidden bg-[#001d55] text-white">
-      <VideoBackdrop />
-      <div className={`${shell} py-16 sm:py-20 lg:py-24`}>
-        <SectionLabel light>{eyebrow}</SectionLabel>
-        <h1 className="max-w-4xl font-serif text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">{title}</h1>
-        <p className="mt-5 max-w-3xl text-base leading-7 text-white/70 sm:text-lg">{copy}</p>
+    <section className="flex min-h-[240px] items-center bg-[#004aad] px-4 py-14 text-center text-white sm:min-h-[280px] sm:px-6 lg:min-h-[300px]">
+      <div className="mx-auto w-full max-w-[1190px] motion-safe:animate-[fadeUp_.7s_ease-out_both]">
+        <SectionLabel light centered>
+          {eyebrow}
+        </SectionLabel>
+        <h1 className="mx-auto max-w-4xl break-words font-serif text-[34px] font-bold leading-[1.04] [overflow-wrap:anywhere] sm:text-[52px] lg:text-[60px]">
+          {title}
+        </h1>
+        <p className="mx-auto mt-5 max-w-[972px] text-sm leading-6 text-white/65 sm:text-base lg:text-lg lg:leading-7">
+          {copy}
+        </p>
       </div>
     </section>
   );
@@ -199,23 +251,21 @@ export function PageHero({
 
 export function CtaBand() {
   return (
-    <section className="relative isolate overflow-hidden bg-[#003087] px-4 py-20 text-center text-white sm:px-6 lg:px-8">
-      <div
-        className="absolute inset-0 -z-10 bg-cover bg-center opacity-35"
-        style={{ backgroundImage: "url('/cta-rails.png')" }}
-      />
-      <div className="absolute inset-0 -z-10 bg-[#003087]/90" />
-      <div className="mx-auto max-w-5xl">
-        <SectionLabel light>Partner With MTN Investments</SectionLabel>
-        <h2 className="font-serif text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">
+    <section className="relative isolate overflow-hidden bg-[#004aad] px-4 py-20 text-center text-white sm:px-6 lg:py-24">
+      <div className="absolute inset-0 -z-10 opacity-[0.04] [background-image:linear-gradient(180deg,#fff_1px,transparent_1px),linear-gradient(90deg,#fff_1px,transparent_1px)] [background-size:72px_72px]" />
+      <div className="mx-auto max-w-[1190px] motion-safe:animate-[fadeUp_.7s_ease-out_both]">
+        <SectionLabel light centered>
+          Partner With MTN Investments
+        </SectionLabel>
+        <h2 className="break-words font-serif text-[32px] font-bold leading-[1.08] [overflow-wrap:anywhere] sm:text-[50px] lg:text-[60px]">
           Ready to Build on the Future Rails?
         </h2>
-        <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-white/70">
-          Tokenize assets, launch settlement rails, deploy exchange infrastructure, or build a private EVM network.
+        <p className="mx-auto mt-5 max-w-[1120px] text-sm leading-6 text-white/68 sm:text-base lg:text-lg lg:leading-7">
+          Whether you are tokenizing real estate, deploying a licensed exchange, building a sovereign blockchain network or launching a digital asset fund, MTN Investments provides the infrastructure, compliance architecture and global expertise.
         </p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <ButtonLink href="/contact" tone="light">
-            Partner With MTN Investments <ArrowRight size={16} aria-hidden />
+            Partner With MTN Investments <ArrowRight size={14} aria-hidden />
           </ButtonLink>
           <ButtonLink href="/contact" tone="outline">
             Request an Institutional Demo
@@ -229,35 +279,39 @@ export function CtaBand() {
 export function Footer() {
   return (
     <footer className="bg-[#001d55] text-white">
-      <div className={`${shell} grid gap-12 py-14 lg:grid-cols-[1fr_1.35fr]`}>
-        <div className="grid max-w-sm gap-4">
-          <Logo compact dark />
-          <p className="text-sm leading-7 text-white/45">
+      <div className={`${shell} grid gap-10 py-12 sm:grid-cols-[1.2fr_2fr] lg:py-14`}>
+        <div className="max-w-sm">
+          <Logo dark />
+          <p className="mt-5 text-sm leading-6 text-white/45">
             Connecting tokenization, settlement and blockchain infrastructure across dynamic markets.
           </p>
-          <span className="flex items-center gap-2 text-sm text-white/40">
-            <MapPin size={15} aria-hidden /> Singapore Pte Ltd
-          </span>
-          <Link className="flex items-center gap-2 text-sm text-white/40 transition hover:text-white/75" href="/contact">
-            <Mail size={15} aria-hidden /> mtninvestments.net
-          </Link>
+          <div className="mt-5 grid gap-2">
+            <span className="flex items-center gap-2 text-xs text-white/45">
+              <MapPin size={14} aria-hidden /> Singapore Pte Ltd
+            </span>
+            <Link className="flex items-center gap-2 text-xs text-white/45 transition hover:text-white/80" href="/contact">
+              <Mail size={14} aria-hidden /> mtninvestments.net
+            </Link>
+          </div>
         </div>
+
         <div className="grid gap-8 sm:grid-cols-3">
           {[
             {
               title: "Platforms",
               links: [
-                { label: "FuzionOS", href: "/#ecosystem" },
-                { label: "FuzionPay", href: "/#ecosystem" },
-                { label: "Fuzion Capital", href: "/#ecosystem" },
+                { label: "FuzionOS", href: "/projects" },
+                { label: "FuzionPay", href: "/projects" },
+                { label: "MTN Capital", href: "/projects" },
               ],
             },
             {
-              title: "Portfolio",
+              title: "Company",
               links: [
-                { label: "Our Ecosystem", href: "/#ecosystem" },
-                { label: "Solutions", href: "/#solutions" },
-                { label: "Portfolio Companies", href: "/#company" },
+                { label: "About", href: "/company-profile" },
+                { label: "Our Ecosystem", href: "/solutions" },
+                { label: "Solutions", href: "/solutions" },
+                { label: "Global Markets", href: "/" },
               ],
             },
             {
@@ -266,13 +320,16 @@ export function Footer() {
                 { label: "Partner With Us", href: "/contact" },
                 { label: "Request Demo", href: "/contact" },
                 { label: "Institutional Inquiry", href: "/contact" },
+                { label: "Press & Media", href: "/contact" },
               ],
             },
           ].map((group) => (
             <div className="grid content-start gap-3" key={group.title}>
-              <h3 className="font-mono text-xs font-bold uppercase text-[#93c5fd]">{group.title}</h3>
+              <h3 className="font-mono text-[10px] font-bold uppercase tracking-[1.4px] text-[#93c5fd]">
+                {group.title}
+              </h3>
               {group.links.map((link) => (
-                <Link className="text-sm text-white/45 transition hover:text-white/80" href={link.href} key={link.label}>
+                <Link className="text-xs text-white/45 transition hover:text-white/85" href={link.href} key={link.label}>
                   {link.label}
                 </Link>
               ))}

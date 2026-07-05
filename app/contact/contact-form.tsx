@@ -10,6 +10,11 @@ type FormStatus = {
 
 const initialStatus: FormStatus = { type: "idle", message: "" };
 const WEB3FORMS_URL = "https://api.web3forms.com/submit";
+const WEB3FORMS_ACCESS_KEY =
+  process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "fb0e8641-b425-4ad2-88a0-40691270eb6e";
+
+const inputClass =
+  "min-h-10 rounded-[10px] border border-[#cdd9ed] bg-[#f5f8ff] px-4 text-xs text-[#182035] outline-none transition duration-300 placeholder:text-[#9aaac2] focus:border-[#004aad] focus:bg-white focus:shadow-[0_0_0_3px_rgba(0,74,173,0.08)]";
 
 export function ContactForm() {
   const [status, setStatus] = useState<FormStatus>(initialStatus);
@@ -22,29 +27,14 @@ export function ContactForm() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
-    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
-
-    if (!accessKey) {
-      setStatus({
-        type: "error",
-        message: "Contact form is not configured yet.",
-      });
-      setIsSubmitting(false);
-      return;
-    }
-
-    formData.append("access_key", accessKey);
-    formData.append("subject", `MTN Investments inquiry: ${formData.get("interest") || "Website inquiry"}`);
+    formData.append("access_key", WEB3FORMS_ACCESS_KEY);
+    formData.append("subject", `MTN Investments inquiry: ${formData.get("enquiry_type") || "Website inquiry"}`);
     formData.append("from_name", "MTN Investments Website");
 
     try {
       const response = await fetch(WEB3FORMS_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(Object.fromEntries(formData)),
+        body: formData,
       });
 
       const result = (await response.json().catch(() => null)) as {
@@ -58,7 +48,7 @@ export function ContactForm() {
 
       setStatus({
         type: "success",
-        message: "Your message has been sent. We will get back to you shortly.",
+        message: result?.message || "Your partnership enquiry has been sent. We will get back to you shortly.",
       });
       form.reset();
     } catch (error) {
@@ -73,65 +63,49 @@ export function ContactForm() {
 
   return (
     <form
-      className="rounded-lg border border-[#dce5f3] bg-white p-5 shadow-[0_18px_50px_rgba(0,48,135,0.11)] sm:p-7"
+      className="rounded-[10px] bg-white p-5 shadow-[0_18px_50px_rgba(0,48,135,0.10)] sm:p-8 lg:p-9"
       onSubmit={handleSubmit}
     >
-      <p className="mb-3 font-mono text-xs font-extrabold uppercase text-[#0a55c7]">Contact Form</p>
-      <h2 className="font-serif text-2xl font-bold text-[#071327] sm:text-3xl">Request a conversation</h2>
-      <p className="mt-3 text-sm leading-6 text-[#5d6c87]">
-        Share your details and the team will respond through the right institutional track.
-      </p>
-
-      <div className="mt-6 grid gap-4">
+      <div className="grid gap-5">
         <input className="hidden" name="botcheck" tabIndex={-1} autoComplete="off" />
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <label className="grid gap-2 text-sm font-bold text-[#071327]">
-            Name
-            <input
-              className="rounded-lg border border-[#dce5f3] bg-[#fbfdff] px-4 py-3 font-normal outline-none transition focus:border-[#003087]"
-              type="text"
-              name="name"
-              placeholder="Your name"
-              required
-            />
+        <div className="grid gap-5 md:grid-cols-2">
+          <label className="grid gap-2 text-[11px] font-bold text-[#182035]">
+            Full Name
+            <input className={inputClass} type="text" name="name" placeholder="Dr. Sarah Al-Rashidi" required />
           </label>
-          <label className="grid gap-2 text-sm font-bold text-[#071327]">
-            Work email
-            <input
-              className="rounded-lg border border-[#dce5f3] bg-[#fbfdff] px-4 py-3 font-normal outline-none transition focus:border-[#003087]"
-              type="email"
-              name="email"
-              placeholder="you@company.com"
-              required
-            />
+
+          <label className="grid gap-2 text-[11px] font-bold text-[#182035]">
+            Organisation
+            <input className={inputClass} type="text" name="organisation" placeholder="Zenith Capital LLC" required />
           </label>
         </div>
 
-        <label className="grid gap-2 text-sm font-bold text-[#071327]">
-          Interest
-          <select
-            className="rounded-lg border border-[#dce5f3] bg-[#fbfdff] px-4 py-3 font-normal outline-none transition focus:border-[#003087]"
-            name="interest"
-            defaultValue=""
-            required
-          >
+        <label className="grid gap-2 text-[11px] font-bold text-[#182035]">
+          Business Email
+          <input className={inputClass} type="email" name="email" placeholder="sarah@zenithcapital.com" required />
+        </label>
+
+        <label className="grid max-w-[480px] gap-2 text-[11px] font-bold text-[#182035]">
+          Enquiry Type
+          <select className={inputClass} name="enquiry_type" defaultValue="" required>
             <option value="" disabled>
-              Select a track
+              Select an enquiry type
             </option>
             <option>Tokenization</option>
             <option>Wallet and settlement</option>
             <option>Exchange infrastructure</option>
             <option>Private EVM network</option>
+            <option>Strategic partnership</option>
           </select>
         </label>
 
-        <label className="grid gap-2 text-sm font-bold text-[#071327]">
+        <label className="grid max-w-[680px] gap-2 text-[11px] font-bold text-[#182035]">
           Message
           <textarea
-            className="min-h-32 resize-y rounded-lg border border-[#dce5f3] bg-[#fbfdff] px-4 py-3 font-normal outline-none transition focus:border-[#003087]"
+            className={`${inputClass} min-h-[122px] resize-y py-3`}
             name="message"
-            placeholder="Tell us what you want to build"
+            placeholder="Briefly describe your organisation and the project scope..."
             required
           />
         </label>
@@ -140,8 +114,8 @@ export function ContactForm() {
           <div
             className={
               status.type === "success"
-                ? "flex items-start gap-2 rounded-lg border border-[#13845f]/20 bg-[#13845f]/10 p-3 text-sm text-[#0f684b]"
-                : "rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+                ? "flex items-start gap-2 rounded-[10px] border border-[#13845f]/20 bg-[#13845f]/10 p-3 text-sm text-[#0f684b]"
+                : "rounded-[10px] border border-red-200 bg-red-50 p-3 text-sm text-red-700"
             }
           >
             {status.type === "success" && <CheckCircle2 className="mt-0.5 shrink-0" size={16} aria-hidden />}
@@ -150,7 +124,7 @@ export function ContactForm() {
         )}
 
         <button
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#003087] px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
+          className="inline-flex min-h-[58px] items-center justify-center gap-2 rounded-[10px] bg-[#004aad] px-5 py-3 text-xs font-bold text-white shadow-[0_14px_28px_rgba(0,74,173,0.28)] transition duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
           type="submit"
           disabled={isSubmitting}
         >
@@ -160,7 +134,7 @@ export function ContactForm() {
             </>
           ) : (
             <>
-              Send Inquiry <ArrowRight size={16} aria-hidden />
+              Submit Partnership Enquiry <ArrowRight size={14} aria-hidden />
             </>
           )}
         </button>

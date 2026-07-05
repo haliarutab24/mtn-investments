@@ -1,69 +1,95 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { ArrowRight } from "lucide-react";
-import type { projects as projectSource } from "../data";
+import type { projectPlatforms as platformSource } from "../data";
 
-type Project = (typeof projectSource)[number];
+type Platform = (typeof platformSource)[number];
 
-const filters = ["All", "Settlement", "Markets", "Real estate", "Commodities", "Operations", "Financial rails"];
-
-export function ProjectsGrid({ projects }: { projects: Project[] }) {
-  const [activeFilter, setActiveFilter] = useState("All");
-
-  const visibleProjects = useMemo(() => {
-    if (activeFilter === "All") {
-      return projects;
-    }
-
-    return projects.filter((project) => project.tag === activeFilter);
-  }, [activeFilter, projects]);
+export function ProjectsGrid({ platforms }: { platforms: readonly Platform[] }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const active = platforms[activeIndex];
 
   return (
-    <>
-      <div className="mb-8 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible">
-        {filters.map((filter) => {
-          const isActive = filter === activeFilter;
+    <div>
+      <div className="mx-auto grid max-w-[1040px] grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {platforms.slice(0, 4).map((platform, index) => {
+          const selected = activeIndex === index;
 
           return (
             <button
               className={
-                isActive
-                  ? "shrink-0 whitespace-nowrap rounded-full bg-[#003087] px-4 py-2 text-sm font-bold text-white"
-                  : "shrink-0 whitespace-nowrap rounded-full border border-[#dce5f3] bg-white px-4 py-2 text-sm font-bold text-[#5d6c87] transition hover:border-[#003087]/35 hover:text-[#003087]"
+                selected
+                  ? "rounded-[10px] border border-[#004aad] bg-white px-4 py-4 text-left shadow-[0_12px_28px_rgba(0,74,173,0.14)] transition duration-300"
+                  : "rounded-[10px] border border-[#dce5f3] bg-white px-4 py-4 text-left shadow-[0_10px_24px_rgba(0,48,135,0.05)] transition duration-300 hover:-translate-y-0.5 hover:border-[#004aad]/40"
               }
               type="button"
-              aria-pressed={isActive}
-              onClick={() => setActiveFilter(filter)}
-              key={filter}
+              aria-pressed={selected}
+              onClick={() => setActiveIndex(index)}
+              key={platform.name}
             >
-              {filter}
+              <span className="block text-xs font-extrabold text-[#182035]">{platform.name}</span>
+              <span className="mt-1 block text-[11px] leading-4 text-[#5e7099]">{platform.subtitle}</span>
             </button>
           );
         })}
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-        {visibleProjects.map((project) => (
-          <article
-            className="group rounded-lg border border-[#dce5f3] bg-white p-6 shadow-[0_10px_28px_rgba(0,48,135,0.06)] transition hover:-translate-y-1 hover:shadow-[0_18px_50px_rgba(0,48,135,0.12)]"
-            key={project.title}
-          >
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <span className="font-mono text-xs font-extrabold uppercase text-[#079db5]">{project.tag}</span>
-              <span className="rounded-full bg-[#f4f8fd] px-3 py-1 text-xs font-bold text-[#5d6c87]">
-                {project.stage}
-              </span>
-            </div>
-            <h2 className="mt-5 text-2xl font-bold text-[#071327]">{project.title}</h2>
-            <p className="mt-3 text-sm leading-6 text-[#5d6c87]">{project.focus}</p>
-            <Link className="mt-6 inline-flex items-center gap-2 text-sm font-extrabold text-[#003087]" href="/contact">
-              Discuss project <ArrowRight size={15} aria-hidden />
-            </Link>
-          </article>
-        ))}
+      <div className="mx-auto mt-3 grid max-w-[820px] grid-cols-1 gap-3 sm:grid-cols-3">
+        {platforms.slice(4).map((platform, index) => {
+          const actualIndex = index + 4;
+          const selected = activeIndex === actualIndex;
+
+          return (
+            <button
+              className={
+                selected
+                  ? "rounded-[10px] border border-[#004aad] bg-white px-4 py-4 text-left shadow-[0_12px_28px_rgba(0,74,173,0.14)] transition duration-300"
+                  : "rounded-[10px] border border-[#dce5f3] bg-white px-4 py-4 text-left shadow-[0_10px_24px_rgba(0,48,135,0.05)] transition duration-300 hover:-translate-y-0.5 hover:border-[#004aad]/40"
+              }
+              type="button"
+              aria-pressed={selected}
+              onClick={() => setActiveIndex(actualIndex)}
+              key={platform.name}
+            >
+              <span className="block text-xs font-extrabold text-[#182035]">{platform.name}</span>
+              <span className="mt-1 block text-[11px] leading-4 text-[#5e7099]">{platform.subtitle}</span>
+            </button>
+          );
+        })}
       </div>
-    </>
+
+      <section className="mt-12 grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
+        <div className="motion-safe:animate-[fadeUp_.5s_ease-out_both]" key={active.name}>
+          <h2 className="font-serif text-[34px] font-bold leading-tight text-[#004aad] sm:text-[40px]">
+            {active.name}
+          </h2>
+          <p className="mt-4 max-w-[520px] text-sm leading-7 text-[#5e7099]">{active.description}</p>
+          <div className="mt-7">
+            <Link
+              className="inline-flex min-h-10 items-center gap-2 rounded-[10px] bg-[#004aad] px-5 py-2.5 text-[12px] font-bold text-white shadow-[0_10px_24px_rgba(0,74,173,0.28)] transition duration-300 hover:-translate-y-0.5"
+              href="/contact"
+            >
+              {active.button} <ArrowRight size={13} aria-hidden />
+            </Link>
+          </div>
+        </div>
+
+        <ul className="grid gap-3 motion-safe:animate-[fadeUp_.5s_ease-out_both]" key={`${active.name}-features`}>
+          {active.features.map(([title, copy]) => (
+            <li className="rounded-[10px] bg-white px-5 py-4 shadow-[0_10px_24px_rgba(0,48,135,0.05)]" key={title}>
+              <div className="flex gap-3">
+                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: active.accent }} />
+                <div>
+                  <h3 className="text-xs font-extrabold text-[#182035]">{title}</h3>
+                  <p className="mt-1 text-[11px] leading-5 text-[#5e7099]">{copy}</p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
   );
 }
