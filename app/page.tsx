@@ -80,7 +80,7 @@ export default function Home() {
           <source src="/cta-video.mp4?v=20260705" type="video/mp4" />
         </video>
         <div className="absolute inset-0 z-[1] " />
-        <div className="absolute inset-0 z-[2] bg-[linear-gradient(90deg,rgba(0,43,122,0.82),rgba(0,74,173,0.68)_48%,rgba(0,74,173,0.48))]" />
+        <div className="absolute inset-0 z-[2] bg-[linear-gradient(90deg,rgba(0,43,122,0.82),rgba(0,74,173,0.48))]" />
         <div className={`${shell} relative z-10 motion-safe:animate-[fadeUp_.7s_ease-out_both]`}>
           <div className="max-w-[830px]">
             <h1 className="max-w-full break-words font-serif text-[30px] font-bold leading-[1.05] [overflow-wrap:anywhere] sm:max-w-[min(830px,calc(100vw-32px))] sm:text-[56px] lg:text-[64px]">
