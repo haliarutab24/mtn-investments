@@ -122,7 +122,7 @@ export default function Home() {
             copy="MTN Investments owns and commercialises an end-to-end stack for digital asset infrastructure, from blockchain rails to investment marketplaces."
           />
 
-          <div className="mx-auto mt-8 grid w-[min(310px,calc(100vw-32px))] gap-1 rounded-[10px] bg-[#004aad] px-8 py-5 text-center text-white shadow-[0_18px_38px_rgba(0,74,173,0.28)]">
+          <div className="mx-auto mt-8 grid w-[min(310px,calc(100vw-32px))] gap-1 rounded-[10px] bg-[#004aad] px-8 py-5 text-center text-white ">
             <span className="font-mono text-[10px] font-bold uppercase tracking-[1.4px] text-white/50">
               Parent Holding Company
             </span>

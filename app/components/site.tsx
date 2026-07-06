@@ -13,7 +13,7 @@ const buttonBase =
 export function Logo({ dark = false }: { dark?: boolean }) {
   return (
     <Link href="/" className="flex min-w-0 items-center gap-2.5" aria-label="MTN Investments home">
-      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#003087] font-mono text-[10px] font-black text-white shadow-[0_8px_20px_rgba(0,48,135,0.20)]">
+      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#003087] font-mono text-[10px] font-black text-white ">
         MTN
       </span>
       <span className="grid min-w-0 uppercase">
@@ -51,12 +51,12 @@ export function ButtonLink({
 }) {
   const tones = {
     primary:
-      "bg-[#004aad] text-white shadow-[0_10px_24px_rgba(0,74,173,0.28)] focus-visible:outline-[#004aad]",
-    light: "bg-white text-[#004aad] shadow-[0_10px_24px_rgba(0,48,135,0.18)] focus-visible:outline-white",
+      "bg-[#004aad] text-white focus-visible:outline-[#004aad]",
+    light: "bg-white text-[#004aad]  focus-visible:outline-white",
     outline:
       "border border-white/25 bg-white/[0.06] text-white hover:bg-white/12 focus-visible:outline-white",
     ghost:
-      "border border-[#004aad]/18 bg-white text-[#004aad] shadow-[0_8px_20px_rgba(0,48,135,0.06)] focus-visible:outline-[#004aad]",
+      "border border-[#004aad]/18 bg-white text-[#004aad] focus-visible:outline-[#004aad]",
   };
 
   return (
@@ -78,7 +78,7 @@ export function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#003087]/10 bg-[#f5f8ff]/95 text-[#0a1428] shadow-[0_8px_28px_rgba(0,48,135,0.08)] backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-[#003087]/10 bg-[#f5f8ff]/95 text-[#0a1428] backdrop-blur">
       <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center gap-4 px-4 sm:px-6">
         <div className="min-w-0 flex-1 lg:min-w-[248px] lg:flex-none">
           <Logo />
@@ -121,7 +121,7 @@ export function Header() {
             <span className="sr-only">Open menu</span>
             <Menu size={21} aria-hidden />
           </summary>
-          <div className="absolute right-0 top-12 z-20 grid w-[min(300px,calc(100vw-32px))] gap-1 rounded-[10px] border border-[#003087]/10 bg-white p-3 shadow-[0_18px_50px_rgba(0,48,135,0.14)]">
+          <div className="absolute right-0 top-12 z-20 grid w-[min(300px,calc(100vw-32px))] gap-1 rounded-[10px] border border-[#003087]/10 bg-white p-3">
             {navItems.map((item) => {
               const active = isActivePath(pathname, item.href);
 
