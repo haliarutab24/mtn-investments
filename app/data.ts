@@ -47,7 +47,7 @@ export const stackLayers: Array<{
   },
   {
     eyebrow: "Tokenization, Exchange & Marketplace",
-    title: "Fuzion Capital",
+    title: "MTN  Capital",
     icon: Landmark,
     items: ["RWA tokenization", "Commodity & ETF issuance", "CEX exchange", "Secondary marketplace", "Listing & compliance desk"],
   },
@@ -107,7 +107,7 @@ export const solutionRows = [
       "Property valuation support",
       "Legal structure and SPV guidance",
       "Smart contract tokenization",
-      "Token issuance via Fuzion Capital",
+      "Token issuance via MTN Capital",
       "Investor onboarding KYC/AML",
       "Secondary market liquidity",
     ],
@@ -344,7 +344,7 @@ export const projects = [
     focus: "Wallets, custody, escrow and merchant payment infrastructure.",
   },
   {
-    title: "Fuzion Capital",
+    title: "MTN Capital",
     tag: "Markets",
     stage: "Capital layer",
     focus: "Tokenized issuance, exchange operations and structured products.",
